@@ -14,6 +14,16 @@
   height: 100dvh;
 } */
 
+/* used to create classes with specific styles
+then the input class can be added to the components
+-- This should be an exception - a better solution would be to create a resusable component with these styles
+*/
+@layer components {
+  .input {
+    @apply rounded-full border border-stone-200 px-4 py-2 text-sm transition-all duration-300 focus:outline-none focus:ring focus:ring-yellow-500 w-full md:px-6 md:py-3;
+  }
+}
+
 /* https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje */
 .loader {
   width: 45px;

@@ -43,33 +43,32 @@ function CreateOrder() {
   const isSubmitting = navigation.state === "submitting";
 
   return (
-    <div>
-      <h2>Ready to order? Let's go!</h2>
+    <div className="px-4 py-6">
+      <h2 className="font-semibold text-xl mb-6">Ready to order? Let's go!</h2>
 
       <Form method="POST">
-        <div>
-          <label>First Name</label>
-          <input className="input" type="text" name="customer" required />
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">First Name</label>
+          <input className="input w-full" type="text" name="customer" required />
         </div>
 
-        <div>
-          <label>Phone number</label>
-          <div>
-            <input className="input" type="tel" name="phone" required />
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Phone number</label>
+          <div className="w-full">
+            <input className="input w-full" type="tel" name="phone" required />
+            {formErrors?.phone && <p className="text-sm text-red-400 bg-red-100 p-2 mt-2 rounded-lg">{formErrors.phone}</p>}
           </div>
         </div>
 
-        {formErrors?.phone && <p>{formErrors.phone}</p>}
+        
 
-        <div>
-          <label>Address</label>
-          <div>
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label className="sm:basis-40">Address</label>
             {/* class inout defined in index.css */}
-            <input className="input" type="text" name="address" required />
-          </div>
+            <input className="input w-full" type="text" name="address" required />
         </div>
 
-        <div>
+        <div className="flex gap-2 items-center mb-6">
           <input
             type="checkbox"
             name="priority"
@@ -78,7 +77,7 @@ function CreateOrder() {
             // value={withPriority}
             // onChange={(e) => setWithPriority(e.target.checked)}
           />
-          <label htmlFor="priority">Want to yo give your order priority?</label>
+          <label className="font-semibold text-sm" htmlFor="priority">Want to yo give your order priority?</label>
         </div>
 
         <div>

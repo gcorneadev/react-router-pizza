@@ -23,13 +23,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "Uknown",
+  name: "",
 }
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducer: {
+  reducers: {
     updateName(state, action) {
       state.name = action.payload;
     }

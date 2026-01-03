@@ -2,7 +2,8 @@ import { Link } from "react-router-dom";
 import LinkButton from "../../ui/LinkButton";
 import Button from "../../ui/Button";
 import CartItem from "./CartItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCart, clearCart, getTotalItems } from "./cartSlice";
 import { use } from "react";
  
 
@@ -32,9 +33,11 @@ const fakeCart = [
 
 function Cart() {
 
+  const dispatch = useDispatch();
 
-
-  const cart = useSelector((state) => state.cart.cart);
+  // const cart = useSelector((state) => state.cart.cart);
+  const cart = useSelector(getCart);
+  const totalItems = useSelector(getTotalItems);
   const username = useSelector((state) => state.user.name);
 
   return (
@@ -48,7 +51,7 @@ function Cart() {
       
       */}
 
-      <h2 className="mt-7 text-xl font-semibold">Your cart, {username}</h2>
+      <h2 className="mt-7 text-xl font-semibold">Your cart, {!totalItems && <span>is empty!, </span>} {username}</h2>
 
       <ul className="divide-y divide-stone-200">
         {cart.map((item) => (
@@ -56,13 +59,13 @@ function Cart() {
         ))}
       </ul>
 
-      <div>
+      {totalItems > 0 && <div className="flex gap-4 items-center">
         {/* <Link to="/order/new">Order pizzas</Link> */}
         <Button to="/order/new" type="primary">
           Order pizzas
         </Button>
-        <button>Clear cart</button>
-      </div>
+        <Button type="secondary" onClick={() => dispatch(clearCart())}>Clear Cart</Button>
+      </div>}
     </div>
   );
 }

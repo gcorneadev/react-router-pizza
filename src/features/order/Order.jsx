@@ -8,6 +8,7 @@ import {
   formatDate,
 } from "../../utils/helpers";
 import { useEffect } from "react";
+import UpdateOrder from "./UpdateOrder";
 
 const order = {
   id: "ABCDEF",
@@ -96,7 +97,7 @@ function Order() {
           <div>
             <p className="font-semibold">{item.name} &times; {item.quantity}</p>
             <p className="text-sm text-stone-500">
-              Ingredients: {fetcher?.data.find(el=>el.id === item.pizzaId)?.ingredients.join(", ")}
+              Ingredients: {fetcher?.data?.find(el=>el.id === item.pizzaId)?.ingredients.join(", ")}
             </p>
           </div>
           <p className="font-semibold">{formatCurrency(item.totalPrice)}</p>
@@ -108,6 +109,7 @@ function Order() {
         {priority && <p>Price priority: {formatCurrency(priorityPrice)}</p>}
         <p>To pay on delivery: {formatCurrency(orderPrice + priorityPrice)}</p>
       </div>
+      {!priority && <UpdateOrder order={orderData} />}
     </div>
   );
 }

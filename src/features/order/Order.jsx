@@ -1,5 +1,5 @@
 // Test ID: IIDSAT
-import { useLoaderData } from "react-router-dom";
+import { useFetcher, useLoaderData } from "react-router-dom";
 import { getOrder } from "../../services/apiRestaurant";
 
 import {
@@ -7,6 +7,7 @@ import {
   formatCurrency,
   formatDate,
 } from "../../utils/helpers";
+import { useEffect } from "react";
 
 const order = {
   id: "ABCDEF",
@@ -45,6 +46,15 @@ const order = {
 
 function Order() {
   const orderData = useLoaderData();
+  const fetcher = useFetcher();
+
+  useEffect(function(){
+    if (!fetcher.data && fetcher.state === "idle") {
+      fetcher.load(`/menu`);
+    }
+  },[fetcher]);
+
+  // console.log("Order data:", fetcher.data);
 
   // Everyone can search for all orders, so for privacy reasons we're gonna gonna exclude names or address, these are only for the restaurant staff
   const {
@@ -61,15 +71,15 @@ function Order() {
   return (
     <div>
       <div>
-        <h2>Status</h2>
-
-        <div>
-          {priority && <span>Priority</span>}
-          <span>{status} order</span>
-        </div>
+        <h2 className="my-4 pr-4 font-bold flex justify-between">Order {id} Status 
+          <div className="space-x-4">
+            {priority && <span className="bg-red-400 py-1 px-2 rounded-xl uppercase">Priority</span>} 
+            <span className="bg-green-500 py-1 px-2 rounded-xl uppercase">preparing order</span> 
+          </div>
+        </h2>
       </div>
 
-      <div>
+      <div className="bg-stone-300 rounded-lg p-3 flex justify-between items-center">
         <p>
           {deliveryIn >= 0
             ? `Only ${calcMinutesLeft(estimatedDelivery)} minutes left 😃`
@@ -77,6 +87,21 @@ function Order() {
         </p>
         <p>(Estimated delivery: {formatDate(estimatedDelivery)})</p>
       </div>
+
+      {cart.map((item) => (
+        <div
+          key={item.pizzaId}
+          className="flex justify-between items-center py-2 border-b border-stone-200"
+        >
+          <div>
+            <p className="font-semibold">{item.name} &times; {item.quantity}</p>
+            <p className="text-sm text-stone-500">
+              Ingredients: {fetcher?.data.find(el=>el.id === item.pizzaId)?.ingredients.join(", ")}
+            </p>
+          </div>
+          <p className="font-semibold">{formatCurrency(item.totalPrice)}</p>
+        </div>
+      ))}
 
       <div>
         <p>Price pizza: {formatCurrency(orderPrice)}</p>

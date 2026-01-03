@@ -3,6 +3,10 @@ import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import Button from "../../ui/Button";
 import { useSelector } from "react-redux";
+import store from "../../store";
+import { clearCart, getTotalPrice } from "../cart/cartSlice";
+import { formatCurrency } from "../../utils/helpers";
+
 
 // https://uibakery.io/regex-library/phone-number
 const isValidPhone = (str) =>
@@ -38,7 +42,10 @@ function CreateOrder() {
 
   const username = useSelector((state) => state.user.name);
 
-  // const [withPriority, setWithPriority] = useState(false);
+  const [withPriority, setWithPriority] = useState(false);
+  const itemsPrice = useSelector(getTotalPrice);
+  const totalPrice = withPriority ? (Number(itemsPrice) * 0.2 + Number(itemsPrice)).toFixed(2) : itemsPrice;
+
   const cart = fakeCart;
   // gives access to data recived by route
   const formErrors = useActionData();
@@ -78,8 +85,8 @@ function CreateOrder() {
             name="priority"
             id="priority"
             className="h-6 w-6 accent-yellow-500  border border-stone-200 focus:outline-none focus:ring focus:ring-yellow-500 focus:ring-offset-2"
-            // value={withPriority}
-            // onChange={(e) => setWithPriority(e.target.checked)}
+            value={withPriority}
+            onChange={(e) => setWithPriority(e.target.checked)}
           />
           <label className="font-semibold text-sm" htmlFor="priority">Want to yo give your order priority?</label>
         </div>
@@ -87,7 +94,7 @@ function CreateOrder() {
         <div>
           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
           <Button type="primary" disabled={isSubmitting}>
-            {isSubmitting ? "Placing order ..." : "Order now"}
+            {isSubmitting ? "Placing order ..." : `Order now ${formatCurrency(totalPrice)}`}
           </Button>
         </div>
       </Form>
@@ -115,6 +122,10 @@ export async function action({ request }) {
 
   // create new order if no errors
   const newOrder = await createOrder(order);
+
+  // clear cart
+  store.dispatch(clearCart());
+
   return redirect(`/order/${newOrder.id}`);
 }
 

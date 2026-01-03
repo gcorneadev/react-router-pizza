@@ -44,6 +44,7 @@ function CreateOrder() {
   const dispatch = useDispatch();
 
   const username = useSelector((state) => state.user.name);
+  const address = useSelector((state) => state.user.address);
 
   const [withPriority, setWithPriority] = useState(false);
   const itemsPrice = useSelector(getTotalPrice);
@@ -56,11 +57,14 @@ function CreateOrder() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
 
+  function handleGetMyAddress(e) {
+    e.preventDefault();
+    dispatch(fetchAddress());
+  }
+
   return (
     <div className="px-4 py-6">
-      <div>
-          <Button type="secondary" onClick={() => dispatch(fetchAddress())}>get location</Button>
-        </div>
+      
       <h2 className="font-semibold text-xl mb-6">Ready to order? Let's go!</h2>
 
       <Form method="POST">
@@ -83,8 +87,14 @@ function CreateOrder() {
 
         <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
           <label className="sm:basis-40">Address</label>
-            {/* class inout defined in index.css */}
-            <input className="input w-full" type="text" name="address" required />
+            <div className="flex gap-2 w-full">
+              {/* class inout defined in index.css */}
+            <input className="input w-full" type="text" name="address" defaultValue={address} required />
+            <Button className="w-fit" type="small" onClick={handleGetMyAddress} >
+              Get my address
+            </Button>
+            </div>
+            
         </div>
 
         <div className="flex gap-2 items-center mb-6">
